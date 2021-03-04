@@ -1,0 +1,40 @@
+plugins {
+    id 'java'
+    id 'org.jetbrains.kotlin.jvm' version '1.4.21'
+    id 'com.github.johnrengelman.shadow' version '5.2.0'
+}
+
+group 'com.gmail.kiiiiiim1005'
+version '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
+    compile 'io.javalin:javalin:3.13.0'
+
+    compile "org.slf4j:slf4j-simple:1.8.0-beta4"
+    // Templates
+    compile "org.thymeleaf:thymeleaf:3.0.11.RELEASE"
+    compile group: 'org.freemarker', name: 'freemarker', version: '2.3.30'
+
+    // DB
+    compile group: 'mysql', name: 'mysql-connector-java', version: '8.0.19'
+    compile group: 'org.hibernate', name: 'hibernate-core', version: '5.4.27.Final'
+
+
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+}
+
+compileKotlin {
+    kotlinOptions {
+        jvmTarget = "1.8"
+        freeCompilerArgs += ["-Xno-param-assertions"]
+    }
+}
+
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}
