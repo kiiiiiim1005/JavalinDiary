@@ -34,7 +34,6 @@ public class UserDAO {
         final CriteriaQuery<User> cr = cb.createQuery(User.class);
         final Root<User> root = cr.from(User.class);
         cr.select(root).where(cb.equal(root.get("email"), email));
-
         Query query = session.createQuery(cr);
         query.setMaxResults(1);
         List<User> result = query.getResultList();

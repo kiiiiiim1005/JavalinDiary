@@ -14,8 +14,47 @@ public class Diary {
     @JoinColumn(nullable = false)
     private User writer;
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition="LONGTEXT")
     private String contents;
+
+    @Column(nullable = false)
+    private String title;
+
+    private boolean isPublic = false;
+    private long createdTime = System.currentTimeMillis();
+
+    public Diary(){}
+
+    public Diary(User writer, String title, String contents, boolean isPublic) {
+        this.writer = writer;
+        this.title=  title;
+        this.contents = contents;
+        this.isPublic = isPublic;
+    }
+
+    public long getCreatedTime() {
+        return createdTime;
+    }
+
+    public void setCreatedTime(long createdTime) {
+        this.createdTime = createdTime;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public boolean isPublic() {
+        return isPublic;
+    }
+
+    public void setPublic(boolean aPublic) {
+        isPublic = aPublic;
+    }
 
     public long getId() {
         return id;
@@ -41,12 +80,6 @@ public class Diary {
         this.contents = contents;
     }
 
-    @Override
-    public String toString() {
-        return "Diary{" +
-                "id=" + id +
-                ", writer=" + writer +
-                ", contents='" + contents + '\'' +
-                '}';
-    }
+
+
 }

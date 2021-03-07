@@ -19,7 +19,7 @@ public class Strings {
         for (String string : strings) {
             if(string == null || string.isEmpty()) return true;
         }
-        return true;
+        return false;
     }
 
     public static String sha256(String msg)  throws NoSuchAlgorithmException {
@@ -32,6 +32,18 @@ public class Strings {
         StringBuilder sb = new StringBuilder();
         for(byte b : data) {
             sb.append(Integer.toString((b & 0xff) + 0x100, 16).substring(1));
+        }
+        return sb.toString();
+    }
+
+    private final static Pattern scriptTagPattern = Pattern.compile("<[\\s\\t]*\\/script[\\s\\t]*>");
+    public static String removeScriptTags(String str) {
+        Matcher matcher = scriptTagPattern.matcher(str);
+        final StringBuilder sb = new StringBuilder(str);
+        while (matcher.find()) {
+            int start = matcher.start();
+            sb.deleteCharAt(start);
+            sb.insert(start, "&lt;");
         }
         return sb.toString();
     }

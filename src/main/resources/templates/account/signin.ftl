@@ -53,7 +53,12 @@
                 dataType: "text",
                 success: function (data, textStatus, xhr) {
                     if(data == 'correct') {
-                        window.location.href = "/";
+                        var red = findGetParameter("redirect")
+                        if(red != null && red != "") {
+                            window.location.href = red;        
+                        } else {
+                            window.location.href = "/";
+                        }
                     } else {
                         document.getElementById("failnotify").style.display = "block"
                     }
@@ -64,6 +69,20 @@
             })
             return false;
         });
+
+        function findGetParameter(parameterName) {
+            var result = null,
+                tmp = [];
+            location.search
+                .substr(1)
+                .split("&")
+                .forEach(function (item) {
+                tmp = item.split("=");
+                if (tmp[0] === parameterName) result = decodeURIComponent(tmp[1]);
+                });
+            return result;
+        }
+
     </script>
 
 

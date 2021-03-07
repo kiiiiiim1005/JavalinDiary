@@ -20,4 +20,8 @@ public class Util {
         return user;
     }
 
+    public static void sendToSigninWithRedirect(Context ctx) {
+        ctx.redirect("/signin?redirect=" + ctx.path());
+    }
+
 }

@@ -25,11 +25,11 @@
                         aria-expanded="false">계정<span class="caret"></span></a>
                     <ul class="dropdown-menu">
                         <#if user??>
-                            <li><a href="account">계정설정</a></li>
-                            <li><a href="signout">로그아웃</a></li>
+                            <li><a href="/account">계정설정</a></li>
+                            <li><a href="/signout">로그아웃</a></li>
                         <#else>
-                            <li><a href="signin">로그인</a></li>
-                            <li><a href="signup">회원가입</a></li>
+                            <li><a href="/signin">로그인</a></li>
+                            <li><a href="/signup">회원가입</a></li>
                         </#if>
                     </ul>
                 </li>
