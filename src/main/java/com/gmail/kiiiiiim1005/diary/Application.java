@@ -29,13 +29,10 @@ public class Application {
         });
 
 
-        server.exception(Exception.class, new ExceptionHandler<Exception>() {
-            @Override
-            public void handle(@NotNull Exception exception, @NotNull Context ctx) {
-                System.out.println("EXCEPTION HANDLING");
-                closeLocalSession();
-                exception.printStackTrace();
-            }
+        server.exception(Exception.class, (exception, ctx) -> {
+            System.out.println("EXCEPTION HANDLING");
+            closeLocalSession();
+            exception.printStackTrace();
         });
 
         JavalinFreemarker.configure(getFreemarkerConfig());
@@ -55,7 +52,6 @@ public class Application {
                        ctx.render("templates/main.ftl", map);
                        return;
                    }
-
                }
                ctx.render("templates/main.ftl");
            });

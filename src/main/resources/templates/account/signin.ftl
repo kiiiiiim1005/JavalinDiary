@@ -14,6 +14,7 @@
 <body>
     <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
     <script src="js/bootstrap.js"></script>
+
     <@com.nav/>
 
     <div class="container">
@@ -35,6 +36,8 @@
                         <div id="passwordchecknotify" style="display: none;"></div>
                     </div>
                     <button id="btn_login" class="btn btn-primary form-control">로그인</button>
+                    <div style="margin-top: 10px;" class=""><a href="/signup">회원가입</a></div>
+                    
                 </form>
             </div>
             <div id="failnotify" style="text-align: center; color: red; display: none;">가입하지 않은 아이디이거나, 잘못된 비밀번호입니다.</div>

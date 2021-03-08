@@ -36,7 +36,7 @@ public class Strings {
         return sb.toString();
     }
 
-    private final static Pattern scriptTagPattern = Pattern.compile("<[\\s\\t]*\\/script[\\s\\t]*>");
+    private final static Pattern scriptTagPattern = Pattern.compile("<[\\s\\t]*\\/script[\\s\\t]*>", Pattern.CASE_INSENSITIVE);
     public static String removeScriptTags(String str) {
         Matcher matcher = scriptTagPattern.matcher(str);
         final StringBuilder sb = new StringBuilder(str);

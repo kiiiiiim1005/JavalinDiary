@@ -39,5 +39,15 @@ public class DiaryDAO {
         return query.getResultList();
     }
 
+    public List<Diary> getPublicDiaries(int limit, int start) {
+        final CriteriaBuilder cb = session.getCriteriaBuilder();
+        final CriteriaQuery<Diary> cr = cb.createQuery(Diary.class);
+        final Root<Diary> root = cr.from(Diary.class);
+        cr.select(root).where(cb.equal(root.get("isPublic"), true));
+        Query query = session.createQuery(cr);
+        query.setMaxResults(limit);
+        query.setFirstResult(start);
+        return query.getResultList();
+    }
 
 }

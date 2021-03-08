@@ -42,7 +42,7 @@ public class DiaryController extends BaseController {
                     if(pageParam != null) {
                         try {
                             page = Integer.parseInt(pageParam);
-                        } catch (Exception e) { }
+                        } catch (Exception ignored) { }
                     }
                     System.out.println("PAGE: " + page);
                     final DiaryDAO diaryDAO = new DiaryDAO(getLocalSession());
@@ -53,6 +53,25 @@ public class DiaryController extends BaseController {
                     ctx.render("templates/diary/list.ftl", map);
                     closeLocalSession();
                 });
+
+                get("public", ctx-> {
+                    int page = 1;
+                    final String pageParam = ctx.req.getParameter("page");
+                    if(pageParam != null) {
+                        try {
+                            page = Integer.parseInt(pageParam);
+                        } catch (Exception ignored) { }
+                    }
+                    System.out.println("PAGE: " + page);
+                    final DiaryDAO diaryDAO = new DiaryDAO(getLocalSession());
+                    final List<Diary> diaries = diaryDAO.getPublicDiaries(20, (page - 1) * 20);
+
+                    final HashMap<String, Object> map = new HashMap<>();
+                    map.put("diaries", diaries);
+                    ctx.render("templates/diary/public.ftl", map);
+                    closeLocalSession();
+                });
+
                 get("write", ctx-> {
                     final UserDAO userDAO = new UserDAO(getLocalSession());
                     final User user = Util.getUser(ctx, userDAO);
@@ -78,8 +97,12 @@ public class DiaryController extends BaseController {
                         if(Strings.emptyCheck(contents, title, isPublicStr)) {
                             ctx.redirect("/diary/write");
                         } else {
-                            boolean isPublic = isPublicStr.equalsIgnoreCase("true");
-                            ctx.redirect("/diary/view/" + diaryDAO.write(user, title, contents, isPublic).getId());
+                            if(contents.length() > 5000) {
+                                ctx.redirect("/diary/write");
+                            } else {
+                                boolean isPublic = isPublicStr.equalsIgnoreCase("true");
+                                ctx.redirect("/diary/view/" + diaryDAO.write(user, title, Strings.removeScriptTags(contents), isPublic).getId());
+                            }
                         }
                     }
                     closeLocalSession();

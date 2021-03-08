@@ -4,10 +4,8 @@ import com.gmail.kiiiiiim1005.diary.dao.UserDAO;
 import com.gmail.kiiiiiim1005.diary.entity.User;
 import com.gmail.kiiiiiim1005.diary.util.BaseController;
 import io.javalin.Javalin;
-import io.javalin.http.Context;
 
 import java.util.HashMap;
-import java.util.Map;
 
 import static com.gmail.kiiiiiim1005.diary.util.HibernateUtil.closeLocalSession;
 import static com.gmail.kiiiiiim1005.diary.util.HibernateUtil.getLocalSession;
@@ -42,8 +40,9 @@ public class AccountController extends BaseController {
 
                 String email = ctx.req.getParameter("email");
                 if (email == null || !isEmailPattern(email)) {
-                    // TODO
+                    // TODO 중복
                     System.out.println("email err");
+                    closeLocalSession();
                     return;
                 }
 
@@ -60,6 +59,7 @@ public class AccountController extends BaseController {
                 closeLocalSession();
             });
 
+            // For AJAX
             post("logincheck", ctx->{
                 final String email = ctx.req.getParameter("email");
                 final String password = ctx.req.getParameter("password");
@@ -68,9 +68,8 @@ public class AccountController extends BaseController {
                     final User user = userDAO.get(email);
                     if (user != null) {
                         if(user.getPassword().equals(password)) {
-                            ctx.res.getWriter().print("correct");
                             ctx.sessionAttribute("userID", user.getId());
-                            return;
+                            ctx.res.getWriter().print("correct");
                         }
                     }
                 } catch (Throwable t) {

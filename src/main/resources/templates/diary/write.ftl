@@ -91,19 +91,24 @@
             }
             document.body.appendChild(form);
             form.submit();
+            
         }
 
         function writeDiary() {
-            var ele = document.querySelector(".ck-content")
-            ele.setAttribute("contenteditable", "false")
-            var text = ele.outerHTML.toString()
             var title = document.querySelector("#title").value
-            var isPublic = document.querySelector("#public").className.indexOf("active") > -1;
-
             if(title == "") {
                 alert("제목을 입력해주세요"); return;
             }
-
+            if(title.length > 255) {
+                alert("제목이 너무 깁니다."); return;
+            }
+            var isPublic = document.querySelector("#public").className.indexOf("active") > -1;
+            var clone = document.querySelector(".ck-content").cloneNode(true)
+            clone.setAttribute("contenteditable", "false")
+            var text = clone.outerHTML.toString()
+            if(text.length > 5000) {
+                alert("글자수가 너무 많습니다."); return;
+            }
             var obj = {
                 "contents": text,
                 "title": title,
