@@ -1,6 +1,9 @@
 <#macro head>
     <style>
         .centered {
+            margin-bottom: 30px; align-items: center; align-content: center; justify-content: center; display: flex;
+        }
+        .centered2 {
             position: absolute;
             margin: auto;
             display: block;
@@ -19,6 +22,11 @@
                 if ([temp[0]] == sname) { sval = temp[1]; }
             }
             return sval;
+        }
+
+        function activeNav(id) {
+            var e = document.getElementById(id)
+            e.setAttribute("class", e.getAttribute("class") + " active")
         }
     </script>
 </#macro>
@@ -47,11 +55,11 @@
                         aria-expanded="false">계정<span class="caret"></span></a>
                     <ul class="dropdown-menu">
                         <#if user??>
-                            <li><a href="/account">계정설정</a></li>
-                            <li><a href="/signout">로그아웃</a></li>
+                            <li id="nav-account"><a href="/account">계정설정</a></li>
+                            <li id="nav-signout"><a href="/signout">로그아웃</a></li>
                         <#else>
-                            <li><a href="/signin">로그인</a></li>
-                            <li><a href="/signup">회원가입</a></li>
+                            <li id="nav-signin"><a href="/signin">로그인</a></li>
+                            <li id="nav-signup"><a href="/signup">회원가입</a></li>
                         </#if>
                     </ul>
                 </li>
@@ -61,33 +69,5 @@
 </#macro>
 
 <#macro footer>
-    <style>
-        .body {
-            display: flex;
-            min-height: 100vh;
-            flex-direction: column;
-        }
-        .footer {
-            position: fixed;
-            left: 0;
-            bottom: 0;
-            width: 100%;
-            padding: 15px 0;
-            text-align: center;
-            color: white;
-            background: darkgray;
-        }
-        .footer a {
-            text-decoration: underline;
-            color: white;
-        }
-    </style>
-    <!---
-    <div style="height: 100px;"></div>
-    <div class="footer">
-        Made with Javalin, MySQL, Hibernate, Bootstrap, JQuery
-        <br>
-        <right><a href="https://github.com/kiiiiiim1005">GitHub</a></right>
-    </div>
-    -->
+    
 </#macro>

@@ -13,35 +13,47 @@
 
     <style>
         .diary {
+            padding-top: 20px;
             padding-left: 5%;
             padding-right: 5%;
+            font-size: xx-large;
         }
         .title {
-            font-size: 24px;
+            font-size: x-large;
         }
-        .contents {
-            font-size: 19px;
+        .nickname {
+            color: gray;
+            font-size: large;
         }
     </style>
 
     <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
     <script src="/js/bootstrap.js"></script>
     <@com.nav/>
-
     
-    
-    <div class="diary">
-        <div class="panel panel-default">
-            <div class="panel-body title">
-                ${diary.title}
-            </div>
-        </div>
-        <div class="panel panel-default">
-            <div class="panel-body contents">
-                ${diary.contents}
-            </div>
+    <div class="panel panel-default diary" time="${diary.createdTime?long?c}" style="margin: 5px;">
+        <div class="panel-body title">
+            <span class="title">${diary.title}</span><br>
+            <span class="nickname">${diary.writer.nickname}</span>
+            <hr>
+            <span class="contents">${diary.contents}</span>
         </div>
     </div>
+
+    <script>
+        initDiariy()
+        function initDiariy() {
+            var diary = document.getElementsByClassName("diary")[0]
+            var time = diary.getAttribute("time")
+            var ele = document.createElement('span')
+            ele.className = "date"
+            var date = new Date(Number(time))
+            var datestr = date.getFullYear() + "." + date.getMonth() + "." + date.getDate() + ". " + date.getHours() + "시 " + date.getMinutes() + "분"
+            ele.textContent = datestr
+            diary.insertBefore(ele, diary.childNodes[1])
+        }
+    </script>
+
     <@com.footer/>
 </body>
 

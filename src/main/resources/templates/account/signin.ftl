@@ -46,6 +46,8 @@
 
 
     <script type="text/javascript">
+        activeNav("nav-signin")
+
         $('#btn_login').click(function () {
             var email = $('#email').val();
             var password = $('#password').val();

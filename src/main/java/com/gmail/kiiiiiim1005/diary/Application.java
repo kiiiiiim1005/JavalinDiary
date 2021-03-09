@@ -6,17 +6,15 @@ import com.gmail.kiiiiiim1005.diary.dao.UserDAO;
 import com.gmail.kiiiiiim1005.diary.entity.User;
 import com.gmail.kiiiiiim1005.diary.util.HibernateUtil;
 import io.javalin.Javalin;
-import io.javalin.http.Context;
-import io.javalin.http.ExceptionHandler;
 import io.javalin.plugin.rendering.JavalinRenderer;
 import io.javalin.plugin.rendering.template.JavalinFreemarker;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.gmail.kiiiiiim1005.diary.util.HibernateUtil.closeLocalSession;
+import static com.gmail.kiiiiiim1005.diary.util.HibernateUtil.getLocalSession;
 import static com.gmail.kiiiiiim1005.diary.util.Templates.getFreemarkerConfig;
-import static com.gmail.kiiiiiim1005.diary.util.HibernateUtil.*;
 import static io.javalin.apibuilder.ApiBuilder.get;
 
 public class Application {
@@ -54,6 +52,12 @@ public class Application {
                    }
                }
                ctx.render("templates/main.ftl");
+           });
+           get("test", ctx-> {
+               final UserDAO userDAO = new UserDAO(getLocalSession());
+               for(int i = 0; i<100000; i++) {
+                   userDAO.create("test" + i + "@test.com", "1234", "test" + i);
+               }
            });
         });
 

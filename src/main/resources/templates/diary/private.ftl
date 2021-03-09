@@ -10,7 +10,6 @@
 </head>
 
 <body>
-
     <style>
         .diary {
             padding-left: 5%;
@@ -18,13 +17,9 @@
             font-size: 20px;
         }
     </style>
-
     <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
     <script src="/js/bootstrap.js"></script>
     <@com.nav/>
-
-    
-    
     <div class="diary">
         비공개 일기입니다.
     </div>

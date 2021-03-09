@@ -29,8 +29,8 @@ public class DiaryController extends BaseController {
         app.routes(()->{
             path("diary", () -> {
                 get("list", ctx-> {
-                    final UserDAO userDAO = new UserDAO(getLocalSession());
-                    final User user = Util.getUser(ctx, userDAO);
+                    UserDAO userDAO = new UserDAO(getLocalSession());
+                    User user = Util.getUser(ctx, userDAO);
                     if(user == null) {
                         sendToSigninWithRedirect(ctx);
                         closeLocalSession();
@@ -38,17 +38,16 @@ public class DiaryController extends BaseController {
                     }
 
                     int page = 1;
-                    final String pageParam = ctx.req.getParameter("page");
+                    String pageParam = ctx.req.getParameter("page");
                     if(pageParam != null) {
                         try {
                             page = Integer.parseInt(pageParam);
                         } catch (Exception ignored) { }
                     }
-                    System.out.println("PAGE: " + page);
-                    final DiaryDAO diaryDAO = new DiaryDAO(getLocalSession());
-                    final List<Diary> diaries = diaryDAO.getDiaries(user, 20, (page - 1) * 20);
+                    DiaryDAO diaryDAO = new DiaryDAO(getLocalSession());
+                    List<Diary> diaries = diaryDAO.getDiaries(user, 20, (page - 1) * 20);
 
-                    final HashMap<String, Object> map = new HashMap<>();
+                    HashMap<String, Object> map = new HashMap<>();
                     map.put("diaries", diaries);
                     ctx.render("templates/diary/list.ftl", map);
                     closeLocalSession();
@@ -56,25 +55,24 @@ public class DiaryController extends BaseController {
 
                 get("public", ctx-> {
                     int page = 1;
-                    final String pageParam = ctx.req.getParameter("page");
+                    String pageParam = ctx.req.getParameter("page");
                     if(pageParam != null) {
                         try {
                             page = Integer.parseInt(pageParam);
                         } catch (Exception ignored) { }
                     }
-                    System.out.println("PAGE: " + page);
-                    final DiaryDAO diaryDAO = new DiaryDAO(getLocalSession());
-                    final List<Diary> diaries = diaryDAO.getPublicDiaries(20, (page - 1) * 20);
+                    DiaryDAO diaryDAO = new DiaryDAO(getLocalSession());
+                    List<Diary> diaries = diaryDAO.getPublicDiaries(20, (page - 1) * 20);
 
-                    final HashMap<String, Object> map = new HashMap<>();
+                    HashMap<String, Object> map = new HashMap<>();
                     map.put("diaries", diaries);
                     ctx.render("templates/diary/public.ftl", map);
                     closeLocalSession();
                 });
 
                 get("write", ctx-> {
-                    final UserDAO userDAO = new UserDAO(getLocalSession());
-                    final User user = Util.getUser(ctx, userDAO);
+                    UserDAO userDAO = new UserDAO(getLocalSession());
+                    User user = Util.getUser(ctx, userDAO);
                     if(user == null) {
                         sendToSigninWithRedirect(ctx);
                     } else {
@@ -84,13 +82,13 @@ public class DiaryController extends BaseController {
                 });
 
                 post("write", ctx-> {
-                    final Session localSession = getLocalSession();
+                    Session localSession = getLocalSession();
                     UserDAO userDAO = new UserDAO(localSession);
-                    final User user = Util.getUser(ctx, userDAO);
+                    User user = Util.getUser(ctx, userDAO);
                     if(user == null) {
                         sendToSigninWithRedirect(ctx);
                     } else {
-                        final DiaryDAO diaryDAO = new DiaryDAO(localSession);
+                        DiaryDAO diaryDAO = new DiaryDAO(localSession);
                         String contents = ctx.req.getParameter("contents");
                         String title = ctx.req.getParameter("title");
                         String isPublicStr = ctx.req.getParameter("public");
@@ -109,8 +107,8 @@ public class DiaryController extends BaseController {
                 });
 
                 get("view/:diaryID", ctx -> {
-                    final Session localSession = getLocalSession();
-                    final DiaryDAO diaryDAO = new DiaryDAO(localSession);
+                    Session localSession = getLocalSession();
+                    DiaryDAO diaryDAO = new DiaryDAO(localSession);
                     long id;
                     try {
                         id = Long.parseLong(ctx.pathParam("diaryID"));
@@ -119,16 +117,16 @@ public class DiaryController extends BaseController {
                         closeLocalSession();
                         return;
                     }
-                    final Diary diary = diaryDAO.getById(id);
+                    Diary diary = diaryDAO.getById(id);
                     if (diary == null) {
                         ctx.render("templates/diary/unknown.ftl");
                     } else {
                         UserDAO userDAO = new UserDAO(localSession);
-                        final User user = Util.getUser(ctx, userDAO);
+                        User user = Util.getUser(ctx, userDAO);
                         if(!diary.isPublic() && (user == null || diary.getWriter().getId() != user.getId())) {
                             ctx.render("templates/diary/private.ftl");
                         } else {
-                            final HashMap<String, Object> map = new HashMap<>();
+                            HashMap<String, Object> map = new HashMap<>();
                             map.put("diary", diary);
                             ctx.render("templates/diary/view.ftl", map);
                         }

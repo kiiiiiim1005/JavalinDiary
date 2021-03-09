@@ -39,7 +39,8 @@
 
 
     <script type="text/javascript">
-    
+        activeNav("nav-signup")
+
         const form = document.forms["signupform"]
         function checkSubmit() {
             var p1 = document.getElementById('password').value;

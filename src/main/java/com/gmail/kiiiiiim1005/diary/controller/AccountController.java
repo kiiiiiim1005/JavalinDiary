@@ -22,7 +22,6 @@ public class AccountController extends BaseController {
     @Override
     public void applyRoutes() {
         app.routes(()->{
-
             get("signin", ctx-> {
                 ctx.render("templates/account/signin.ftl");
             });
