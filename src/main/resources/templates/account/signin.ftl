@@ -57,7 +57,7 @@
                 data: "email=" + email + "&password=" + password,
                 dataType: "text",
                 success: function (data, textStatus, xhr) {
-                    if(data == 'correct') {
+                    if(xhr.status == 200) {
                         var red = findGetParameter("redirect")
                         if(red != null && red != "") {
                             window.location.href = red;        

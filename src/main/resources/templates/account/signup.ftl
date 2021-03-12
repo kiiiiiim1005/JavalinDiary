@@ -31,7 +31,7 @@
                     <div class="form-group">
                         <input type="text" id="nickname" class="form-control" placeholder="닉네임" hname="닉네임" name="nickname" maxlength="20">
                     </div>
-                    <input type="submit" onclick="return checkSubmit()" class="btn btn-primary form-control" value="로그인">
+                    <input type="submit" onclick="submitForm()" class="btn btn-primary form-control" value="로그인">
                 </form>
             </div>
         </div>
@@ -40,9 +40,14 @@
 
     <script type="text/javascript">
         activeNav("nav-signup")
+        initSubmitButton()
+
+        function initSubmitButton() {
+
+        }
 
         const form = document.forms["signupform"]
-        function checkSubmit() {
+        function submitForm() {
             var p1 = document.getElementById('password').value;
             var p2 = document.getElementById('passwordcheck').value;
             if( p1 != p2 ) {

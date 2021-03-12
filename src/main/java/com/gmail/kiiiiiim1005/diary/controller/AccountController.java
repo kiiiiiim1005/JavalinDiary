@@ -35,25 +35,21 @@ public class AccountController extends BaseController {
             });
 
             post("signup", ctx->{
-                System.out.println("signup post");
-
                 String email = ctx.req.getParameter("email");
                 if (email == null || !isEmailPattern(email)) {
-                    // TODO 중복
-                    System.out.println("email err");
+                    ctx.status(403);
                     closeLocalSession();
                     return;
                 }
-
-                final UserDAO userDAO = new UserDAO(getLocalSession());
+                UserDAO userDAO = new UserDAO(getLocalSession());
                 try {
                     userDAO.create(email, ctx.req.getParameter("password"), ctx.req.getParameter("nickname"));
                     final HashMap<String, Object> map = new HashMap<>();
                     map.put("registered", true);
-                    ctx.render("templates/account/signin.ftl", map);
+                    ctx.status(200);
                 } catch (Throwable t) {
                     t.printStackTrace();
-                    // TODO
+                    ctx.status(409);
                 }
                 closeLocalSession();
             });
@@ -68,7 +64,7 @@ public class AccountController extends BaseController {
                     if (user != null) {
                         if(user.getPassword().equals(password)) {
                             ctx.sessionAttribute("userID", user.getId());
-                            ctx.res.getWriter().print("correct");
+                            ctx.status(200);
                         }
                     }
                 } catch (Throwable t) {
