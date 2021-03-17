@@ -53,25 +53,24 @@
             var password = $('#password').val();
             $.ajax({
                 type: "POST",
-                url: "/logincheck",
+                url: "/login",
                 data: "email=" + email + "&password=" + password,
                 dataType: "text",
                 success: function (data, textStatus, xhr) {
-                    if(xhr.status == 200) {
-                        var red = findGetParameter("redirect")
-                        if(red != null && red != "") {
-                            window.location.href = red;        
-                        } else {
-                            window.location.href = "/";
-                        }
+                    var red = findGetParameter("redirect")
+                    if(red != null && red != "") {
+                        window.location.href = red;        
                     } else {
-                        document.getElementById("failnotify").style.display = "block"
+                        window.location.href = "/";
                     }
                 }, 
-                error: function (request, status, error) {
-                    alert("code:" + request.status + "\n" + "error:" + error);
-                }
-            })
+                error: function (xhr, textStatus, errorThrown) {
+                    if(xhr.status == 500) {
+                        alert("서버 오류로 로그인에 실패하였습니다.")
+                    }
+                    document.getElementById("failnotify").style.display = "block"
+                },
+            });
             return false;
         });
 

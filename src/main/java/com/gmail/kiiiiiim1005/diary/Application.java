@@ -53,12 +53,6 @@ public class Application {
                }
                ctx.render("templates/main.ftl");
            });
-           get("test", ctx-> {
-               final UserDAO userDAO = new UserDAO(getLocalSession());
-               for(int i = 0; i<100000; i++) {
-                   userDAO.create("test" + i + "@test.com", "1234", "test" + i);
-               }
-           });
         });
 
         new AccountController(server).applyRoutes();

@@ -40,12 +40,6 @@
 
     <script type="text/javascript">
         activeNav("nav-signup")
-        initSubmitButton()
-
-        function initSubmitButton() {
-
-        }
-
         const form = document.forms["signupform"]
         function submitForm() {
             var p1 = document.getElementById('password').value;
@@ -66,9 +60,34 @@
                     alertstr = alertstr.substr(0, alertstr.length-2)
                 }
                 alert(alertstr + "칸을 입력해주세요")
-                return false;
+                return;
             }
-            return true;
+            
+            $.ajax({
+                type: "POST",
+                url: "/signup",
+                data: "email=" + $("#email").val() + "&password=" + $("#password").val() + "&nickname=" + $("#nickname").val(),
+                dataType: "text",
+                success: function (data, textStatus, xhr) {
+                    if(xhr.status == 200) {
+                        var red = findGetParameter("redirect")
+                        if(red != null && red != "") {
+                            window.location.href = red;        
+                        } else {
+                            window.location.href = "/";
+                        }
+                    } else {
+                        document.getElementById("failnotify").style.display = "block"
+                    }
+                }, 
+                error: function (xhr, status, error) {   
+                    if(xhr.status == 409) {
+                        
+                    } else {
+                        alert("서버 오류로 회원가입에 실패하였습니다.")
+                    }
+                }
+            })
         }
         const pwInput = document.getElementById('password')
         const pwCheckInput = document.getElementById('passwordcheck')

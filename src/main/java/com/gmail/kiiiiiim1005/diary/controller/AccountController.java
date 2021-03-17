@@ -3,8 +3,11 @@ package com.gmail.kiiiiiim1005.diary.controller;
 import com.gmail.kiiiiiim1005.diary.dao.UserDAO;
 import com.gmail.kiiiiiim1005.diary.entity.User;
 import com.gmail.kiiiiiim1005.diary.util.BaseController;
+import com.gmail.kiiiiiim1005.diary.util.CauseIterator;
 import io.javalin.Javalin;
+import org.eclipse.jetty.util.ajax.JSON;
 
+import java.sql.BatchUpdateException;
 import java.util.HashMap;
 
 import static com.gmail.kiiiiiim1005.diary.util.HibernateUtil.closeLocalSession;
@@ -34,6 +37,7 @@ public class AccountController extends BaseController {
                 ctx.redirect("/");
             });
 
+            // Ajax
             post("signup", ctx->{
                 String email = ctx.req.getParameter("email");
                 if (email == null || !isEmailPattern(email)) {
@@ -47,15 +51,17 @@ public class AccountController extends BaseController {
                     final HashMap<String, Object> map = new HashMap<>();
                     map.put("registered", true);
                     ctx.status(200);
-                } catch (Throwable t) {
-                    t.printStackTrace();
-                    ctx.status(409);
+                } catch (Throwable pe) {
+                    ctx.status(500);
                 }
+                System.out.println("sleep");
+                Thread.sleep(5000);
+                System.out.println("sleep end");
                 closeLocalSession();
             });
 
-            // For AJAX
-            post("logincheck", ctx->{
+            // Ajax
+            post("login", ctx->{
                 final String email = ctx.req.getParameter("email");
                 final String password = ctx.req.getParameter("password");
                 final UserDAO userDAO = new UserDAO(getLocalSession());
@@ -65,13 +71,22 @@ public class AccountController extends BaseController {
                         if(user.getPassword().equals(password)) {
                             ctx.sessionAttribute("userID", user.getId());
                             ctx.status(200);
+                        } else {
+                            ctx.status(401);
                         }
+                    } else {
+                        ctx.status(401);
                     }
                 } catch (Throwable t) {
                     t.printStackTrace();
+                    ctx.status(500);
                 } finally {
                     closeLocalSession();
                 }
+            });
+
+            post("check-duplicate", ctx-> {
+                
             });
         });
     }

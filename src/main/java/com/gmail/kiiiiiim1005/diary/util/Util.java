@@ -21,4 +21,12 @@ public class Util {
         ctx.redirect("/signin?redirect=" + ctx.path());
     }
 
+    public static void printCauses(Throwable t) {
+        if (t.getCause() != null) {
+            System.out.println(t.getCause().getClass());
+            printCauses(t.getCause());
+        }
+    }
+
+
 }
