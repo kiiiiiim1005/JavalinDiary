@@ -3,12 +3,10 @@ package com.gmail.kiiiiiim1005.diary.controller;
 import com.gmail.kiiiiiim1005.diary.dao.UserDAO;
 import com.gmail.kiiiiiim1005.diary.entity.User;
 import com.gmail.kiiiiiim1005.diary.util.BaseController;
-import com.gmail.kiiiiiim1005.diary.util.CauseIterator;
 import io.javalin.Javalin;
-import org.eclipse.jetty.util.ajax.JSON;
 
-import java.sql.BatchUpdateException;
 import java.util.HashMap;
+import java.util.Optional;
 
 import static com.gmail.kiiiiiim1005.diary.util.HibernateUtil.closeLocalSession;
 import static com.gmail.kiiiiiim1005.diary.util.HibernateUtil.getLocalSession;
@@ -24,21 +22,21 @@ public class AccountController extends BaseController {
 
     @Override
     public void applyRoutes() {
-        app.routes(()->{
-            get("signin", ctx-> {
+        app.routes(() -> {
+            get("signin", ctx -> {
                 ctx.render("templates/account/signin.ftl");
             });
 
-            get("signup", ctx-> {
+            get("signup", ctx -> {
                 ctx.render("templates/account/signup.ftl");
             });
-            get("signout", ctx-> {
+            get("signout", ctx -> {
                 ctx.req.getSession().invalidate();
                 ctx.redirect("/");
             });
 
             // Ajax
-            post("signup", ctx->{
+            post("signup", ctx -> {
                 String email = ctx.req.getParameter("email");
                 if (email == null || !isEmailPattern(email)) {
                     ctx.status(403);
@@ -54,21 +52,18 @@ public class AccountController extends BaseController {
                 } catch (Throwable pe) {
                     ctx.status(500);
                 }
-                System.out.println("sleep");
-                Thread.sleep(5000);
-                System.out.println("sleep end");
                 closeLocalSession();
             });
 
             // Ajax
-            post("login", ctx->{
+            post("login", ctx -> {
                 final String email = ctx.req.getParameter("email");
                 final String password = ctx.req.getParameter("password");
                 final UserDAO userDAO = new UserDAO(getLocalSession());
                 try {
                     final User user = userDAO.get(email);
                     if (user != null) {
-                        if(user.getPassword().equals(password)) {
+                        if (user.getPassword().equals(password)) {
                             ctx.sessionAttribute("userID", user.getId());
                             ctx.status(200);
                         } else {
@@ -77,6 +72,8 @@ public class AccountController extends BaseController {
                     } else {
                         ctx.status(401);
                     }
+                } catch (NullPointerException e) {
+                    ctx.status(400);
                 } catch (Throwable t) {
                     t.printStackTrace();
                     ctx.status(500);
@@ -85,8 +82,28 @@ public class AccountController extends BaseController {
                 }
             });
 
-            post("check-duplicate", ctx-> {
-                
+            /**
+             * AJAX
+             * 키 - email, nickname
+             * 중복된 키를 하나 이상 리턴(',' 문자로 구분)
+             */
+            post("check-duplicate", ctx -> {
+                StringBuilder sb = new StringBuilder();
+                UserDAO userDAO = new UserDAO(getLocalSession());
+                Optional.ofNullable(ctx.req.getParameter("email")).ifPresent(email -> {
+                    if (userDAO.get(email) != null) sb.append("email");
+                });
+                Optional.ofNullable(ctx.req.getParameter("nickname")).ifPresent(nickname -> {
+                    if (userDAO.getByNickname(nickname) != null) {
+                        if (sb.length() > 0) {
+                            sb.append(", nickname");
+                        } else {
+                            sb.append("nickname");
+                        }
+                    }
+                });
+                ctx.res.getWriter().print(sb.toString());
+                closeLocalSession();
             });
         });
     }

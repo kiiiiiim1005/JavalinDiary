@@ -42,8 +42,19 @@ public class UserDAO {
     }
 
     public User get(long id) {
-        session.beginTransaction();
         return session.get(User.class, id);
+    }
+
+    public User getByNickname(String nickname) {
+        final CriteriaBuilder cb = session.getCriteriaBuilder();
+        final CriteriaQuery<User> cr = cb.createQuery(User.class);
+        final Root<User> root = cr.from(User.class);
+        cr.select(root).where(cb.equal(root.get("nickname"), nickname));
+        Query query = session.createQuery(cr);
+        query.setMaxResults(1);
+        List<User> result = query.getResultList();
+        if(result.size() > 0) return result.get(0);
+        return null;
     }
 
 }

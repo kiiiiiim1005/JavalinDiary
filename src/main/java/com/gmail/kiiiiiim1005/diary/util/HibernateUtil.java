@@ -52,7 +52,6 @@ public class HibernateUtil {
         if (session == null) {
             session = sessionFactory.openSession();
             localSession.set(session);
-            System.out.println("sesion start");
         }
         return session;
     }

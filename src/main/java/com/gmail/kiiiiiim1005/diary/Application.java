@@ -22,10 +22,9 @@ public class Application {
     Javalin server;
 
     Application(int port) {
-        server = Javalin.create(c-> {
+        server = Javalin.create(c -> {
             c.addStaticFiles("static");
         });
-
 
         server.exception(Exception.class, (exception, ctx) -> {
             System.out.println("EXCEPTION HANDLING");
@@ -36,23 +35,23 @@ public class Application {
         JavalinFreemarker.configure(getFreemarkerConfig());
         JavalinRenderer.register(JavalinFreemarker.INSTANCE, ".ftl");
 
-        server.routes(()->{
-           get("/", ctx -> {
-               final Object attrUserID = ctx.sessionAttribute("userID");
-               if(attrUserID != null) {
-                   long id = ((long) attrUserID);
-                   final UserDAO userDAO = new UserDAO(getLocalSession());
-                   final User user = userDAO.get(id);
-                   closeLocalSession();
-                   if(user != null) {
-                       Map<String, Object> map = new HashMap<>();
-                       map.put("user", user);
-                       ctx.render("templates/main.ftl", map);
-                       return;
-                   }
-               }
-               ctx.render("templates/main.ftl");
-           });
+        server.routes(() -> {
+            get("/", ctx -> {
+                final Object attrUserID = ctx.sessionAttribute("userID");
+                if (attrUserID != null) {
+                    long id = ((long) attrUserID);
+                    final UserDAO userDAO = new UserDAO(getLocalSession());
+                    final User user = userDAO.get(id);
+                    closeLocalSession();
+                    if (user != null) {
+                        Map<String, Object> map = new HashMap<>();
+                        map.put("user", user);
+                        ctx.render("templates/main.ftl", map);
+                        return;
+                    }
+                }
+                ctx.render("templates/main.ftl");
+            });
         });
 
         new AccountController(server).applyRoutes();
@@ -60,7 +59,6 @@ public class Application {
 
         server.start(port);
     }
-
 
 
     public static void main(String[] args) throws ClassNotFoundException {
