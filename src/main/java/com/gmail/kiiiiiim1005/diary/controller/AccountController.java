@@ -35,7 +35,6 @@ public class AccountController extends BaseController {
                 ctx.redirect("/");
             });
 
-            // Ajax
             post("signup", ctx -> {
                 String email = ctx.req.getParameter("email");
                 if (email == null || !isEmailPattern(email)) {
